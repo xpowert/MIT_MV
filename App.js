@@ -1,38 +1,37 @@
-import * as React from 'react';
+import React from 'react';
 import { Text, View, StyleSheet } from 'react-native';
 import Constants from 'expo-constants';
-
-// You can import from local files
 import AssetExample from './components/AssetExample';
 
-// or any pure javascript modules available in npm
-import { Card } from 'react-native-paper';
-
-export default function App() {
+const HelloWAP = () => {
   return (
-    <View style={styles.container}>
-      <Text style={styles.paragraph}>
-        Change code in the editor and watch it change on your phone! Save to get a shareable url.
+    <View
+      style={{
+        flex: 1,
+        justifyContent: "center",
+        alignItems: "center"
+      }}>
+      <AssetExample />
+      <Text style={styles.texter2}>
+      Hello world from group 07{"\n"}
+      Member:<Text style={styles.texter}> Mārcis Veļikanovs</Text>
       </Text>
-      <Card>
-        <AssetExample />
-      </Card>
+      <Text style={styles.texter2}>This is my Mārča Veļikanova first React Native application
+      </Text>
     </View>
-  );
+  )
 }
+export default HelloWAP;
+
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: 'center',
-    paddingTop: Constants.statusBarHeight,
-    backgroundColor: '#ecf0f1',
-    padding: 8,
-  },
-  paragraph: {
-    margin: 24,
-    fontSize: 18,
+  texter: {
     fontWeight: 'bold',
+  },
+  texter2: {
+    margin: 20,
+    fontSize: 18,
+    color: 'gray',
     textAlign: 'center',
   },
 });

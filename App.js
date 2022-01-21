@@ -1,38 +1,76 @@
-import * as React from 'react';
-import { Text, View, StyleSheet } from 'react-native';
+import React, { useEffect, useState } from "react";
+import { Text, View, StyleSheet, FlatList} from 'react-native';
+import { Divider, useTheme } from 'react-native-elements';
 import Constants from 'expo-constants';
+import { NavigationContainer } from '@react-navigation/native';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import { HomeScreen } from './pages/homeScreen';
 
 // You can import from local files
-import AssetExample from './components/AssetExample';
+import CryptoList from './components/cyproList';
 
+//load coinDetail component
+import CryptoDetail from './pages/coinDetail';
 // or any pure javascript modules available in npm
 import { Card } from 'react-native-paper';
+import { getMarketData } from './components/cryptoApi';
+
+const Stack = createNativeStackNavigator();
 
 export default function App() {
+  const [data, setData] = useState([]);
+  const [selectedCoinData, setSelectedCoinData] = useState([]);
+
+  useEffect(() => {
+    const fetchMarketData = async () => {
+      const marketData = await getMarketData();
+      setData(marketData);
+    }
+    fetchMarketData();
+  }, [])
+  
+
   return (
     <View style={styles.container}>
-      <Text style={styles.paragraph}>
-        Change code in the editor and watch it change on your phone! Save to get a shareable url.
-      </Text>
-      <Card>
-        <AssetExample />
-      </Card>
+      <View style={styles.titleWrap}>
+        <Text style={styles.largeTitle}>
+           Kriptovalūtu cenas
+        </Text>
+      <Divider width={1} style={styles.divider} />
+      </View>
+   <FlatList
+        keyExtractor={(item) => item.id}
+        data={data}
+        renderItem={({ item }) => (
+          <CryptoList
+            name={item.name}
+            symbol={item.symbol}
+            currentPrice={item.current_price}
+            priceChangePercentage={item.price_change_percentage_24h}
+            logoUrl={item.image}
+            onPress={() => navigate(CryptoDetail, {selectedCoinData})}
+          />
+          
+        )}
+      />
     </View>
   );
 }
 
 const styles = StyleSheet.create({
-  container: {
+  container:{
     flex: 1,
-    justifyContent: 'center',
-    paddingTop: Constants.statusBarHeight,
-    backgroundColor: '#ecf0f1',
-    padding: 8,
+    backgroundColor: '#fff',
   },
-  paragraph: {
-    margin: 24,
-    fontSize: 18,
+  titleWrap:{
+    marginTop:50,
+    paddingHorizontal: 15,
+  },
+  largeTitle:{
+    fontSize: 22,
     fontWeight: 'bold',
-    textAlign: 'center',
   },
+  divider: {
+    marginTop: 10,
+  }
 });
